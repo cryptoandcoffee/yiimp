@@ -7,7 +7,7 @@ class YaampMemcache
 	public function __construct()
 	{
 		if(!function_exists("memcache_connect")) return;
-		$this->memcache = memcache_connect("127.0.0.1", 11211);
+		$this->memcache = memcache_connect("memcached", 11211);
 	}
 
 	public function get($key)

@@ -63,7 +63,7 @@ return array(
 			'keyPrefix'=>'',
 			'servers'=>array(
 				array(
-					'host'=>'127.0.0.1',
+					'host'=>'memcached',
 					'port'=> 11211,
 					'weight'=> 60,
 				),
