@@ -292,11 +292,30 @@
         // this method has to be used after settings the dimesions
         // on the element returned by getCanvas()
         this.initCanvas = function(canvas) {
-            if ($.jqplot.use_excanvas) {
-                return window.G_vmlCanvasManager.initElement(canvas);
-            }
-            return canvas;
-        };
+    if ($.jqplot.use_excanvas) {
+        return window.G_vmlCanvasManager.initElement(canvas);
+    }
+
+    var cctx = canvas.getContext('2d');
+
+    var canvasBackingScale = 1;
+    if (window.devicePixelRatio > 1 && (cctx.webkitBackingStorePixelRatio === undefined || 
+                                                cctx.webkitBackingStorePixelRatio < 2)) {
+            canvasBackingScale = window.devicePixelRatio;
+    }
+    var oldWidth = canvas.width;
+    var oldHeight = canvas.height;
+
+    canvas.width = canvasBackingScale * canvas.width;
+    canvas.height = canvasBackingScale * canvas.height;
+    canvas.style.width = oldWidth + 'px';
+    canvas.style.height = oldHeight + 'px';
+    cctx.save();
+
+    cctx.scale(canvasBackingScale, canvasBackingScale);
+
+    return canvas;
+};
 
         this.freeAllCanvases = function() {
             for (var i = 0, l=myCanvases.length; i < l; i++) {

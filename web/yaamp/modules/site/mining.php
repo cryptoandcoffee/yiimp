@@ -148,11 +148,13 @@ function graph_init_price(data)
 		title: '<b>Estimate (mBTC/{$algo_unit}/day)</b>',
 		axes: {
 			xaxis: {
-				tickInterval: 7200,
+				tickInterval: 3600,
+				autoscale: true,
 				renderer: $.jqplot.DateAxisRenderer,
 				tickOptions: {formatString: '<font size=1>%#Hh</font>'}
 			},
 			yaxis: {
+				autoscale: true,
 				min: 0,
 				tickOptions: {formatString: '<font size=1>%#.3f &nbsp;</font>'}
 			}
@@ -170,7 +172,15 @@ function graph_init_price(data)
 			shadowDepth: 0,
 			background: '#ffffff'
 		},
-
+  series: [
+        {
+            color: '#1498D5',
+            fill: true,
+            fillAndStroke: true,
+            fillColor: '#772D0B',
+            fillAlpha: 0.8
+        }
+  ]
 	});
 }
 
@@ -197,12 +207,14 @@ function pool_hashrate_graph_init(data)
 		title: '<b>Pool Hashrate (Mh/s)</b>',
 		axes: {
 			xaxis: {
-				tickInterval: 7200,
+				tickInterval: 3600,
+				autoscale: true,
 				renderer: $.jqplot.DateAxisRenderer,
 				tickOptions: {formatString: '<font size=1>%#Hh</font>'}
 			},
 			yaxis: {
 				min: 0,
+				autoscale: true,
 				tickOptions: {formatString: '<font size=1>%#.3f &nbsp;</font>'}
 			}
 		},
@@ -224,6 +236,15 @@ function pool_hashrate_graph_init(data)
 		{
 			show: true
 		},
+  series: [
+        {
+            color: '#1498D5',
+            fill: true,
+            fillAndStroke: true,
+            fillColor: '#772D0B',
+            fillAlpha: 1
+        }
+  ]		
 
 	});
 }

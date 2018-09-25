@@ -15,8 +15,8 @@ echo <<<END
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<meta name="description" content="Yii mining pools for alternative crypto currencies">
-<meta name="keywords" content="anonymous,mining,pool,maxcoin,bitcoin,altcoin,auto,switch,exchange,profit,decred,scrypt,x11,x13,x14,x15,lbry,lyra2re,neoscrypt,sha256,quark,skein2">
+<meta name="description" content="Crypto and Coffee mining pools for Skunk | Skein2 | Skein | Lyra2v2 | Groestl | Blake2s">
+<meta name="keywords" content="mining,pool,bitcoin,altcoin,lyra2v2,skein2,blake2s,skein,crypto,crypto mining,cryptoandcoffee,crypto and coffee">
 
 END;
 
@@ -140,7 +140,7 @@ function showPageFooter()
 	$year = date("Y", time());
 
 	echo "<p>&copy; $year ".YAAMP_SITE_NAME.' - '.
-		'<a href="http://github.com/tpruvot/yiimp">Open source Project</a></p>';
+		'<a href="https://cryptoandcoffee.com/">Sponsored by Crypto and Coffee</a></p>';
 
 	echo '</div><!-- footer -->';
 }

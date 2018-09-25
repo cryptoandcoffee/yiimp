@@ -31,10 +31,10 @@ echo <<<EOT
 
 <style type="text/css">
 span.block { padding: 2px; display: inline-block; text-align: center; min-width: 75px; border-radius: 3px; }
-span.block.new       { color: white; background-color: #ad4ef0; }
-span.block.orphan    { color: white; background-color: #d9534f; }
-span.block.immature  { color: white; background-color: #f0ad4e; }
-span.block.confirmed { color: white; background-color: #5cb85c; }
+span.block.new       { color: white; background-color: #5FC2EF; }
+span.block.orphan    { color: white; background-color: #772D0B; }
+span.block.immature  { color: white; background-color: #EF8C5F; }
+span.block.confirmed { color: white; background-color: #0B5577; }
 b.row a { font-size: 10pt; }
 .ssrow td.row { font-size: .8em; }
 td.right { text-align: right; }

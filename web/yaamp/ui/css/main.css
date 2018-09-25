@@ -18,14 +18,14 @@ body
 
 a, a:visited
 {
-	color: #306495;
+	color: #0B5577;
 	background: inherit;
 	text-decoration: none;
 }
 
 a:hover
 {
-	color: #73471B;
+	color: #0B5577;
 	background: inherit;
 	text-decoration: underline;
 }
@@ -90,9 +90,8 @@ hr
 	left: 0px;
 	z-index: 8;
 	height: 40px;
-	color: #aaa;
-
-	background-image: url(/images/base/top_header.png);
+	background: #1498D5;
+	color: white;
 	background-repeat: repeat-x;
 	
 	-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .25);
@@ -110,14 +109,13 @@ hr
 {
 	text-decoration: none;
 	padding: 10px;
-	color: #aaa;
+	color: #fff;
 }
 
 .page .tabmenu-inner .selected
 {
-	color: #eee;
 	border: 1px solid #181818;
-	background-image: url(/images/base/top_header_selected.png);
+	background: black;	
 	background-repeat: repeat-x;
 }
 
@@ -148,9 +146,10 @@ hr
 	font-size: 0.8em;
 	font-weight: bold;
 	text-align: center;
-	padding: 10px;
-	background-color: #ccc;
-	color: #333;
+	padding: 5px;
+	width: 98%;
+	background-color: #1498D5;
+	color: #fff;
 }
 
 .page .footer p
@@ -164,14 +163,14 @@ hr
 .main-left-box
 {
 	border: 1px solid #e8e8e8;
-	border-radius: 5px;
 }
 
 .main-left-title
 {
-	padding: 8px;
-	background-color: #e5e5e5;
+	padding: 5px;
 	font-weight: bold;
+	color: white;
+	background: black;
 }
 
 .main-left-inner
