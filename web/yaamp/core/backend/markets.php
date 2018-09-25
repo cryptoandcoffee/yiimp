@@ -173,42 +173,32 @@ function BackendWatchMarkets($marketname=NULL)
 
 function getBestMarket($coin)
 {
-	$market = NULL;
-	if ($coin->symbol == 'BTC')
-		return NULL;
+        $market = NULL;
+        if ($coin->symbol == 'BTC')
+                return NULL;
 
-	if (!empty($coin->symbol2)) {
-		$alt = getdbosql('db_coins', "symbol=:symbol", array(':symbol'=>$coin->symbol2));
-		if ($alt && $alt->symbol2 != $coin->symbol2)
-			return getBestMarket($alt);
-	}
+        // get coin market first (if set)
+        $market = getdbosql('db_markets', "coinid={$coin->id} AND price!=0 AND NOT deleted AND NOT disabled ORDER BY price DESC"); 
+                if(!$market) {
+                  debuglog("best market is unknown {$coin->name}");
+                  return NULL;
+                } else {
+                debuglog("best market {$coin->name} is {$market->name}"); 
+                $coin->price = $market->price;
+                $coin->market = $market->name; 
+                $coin->save(); 
+        }
 
-	if (!empty($coin->market)) {
-		// get coin market first (if set)
-		if ($coin->market != 'BEST' && $coin->market != 'unknown')
-			$market = getdbosql('db_markets', "coinid={$coin->id} AND price!=0 AND NOT deleted AND
-				NOT disabled AND IFNULL(deposit_address,'') != '' AND name=:name",
-				array(':name'=>$coin->market));
-		else
-		// else take one of the big exchanges...
-			$market = getdbosql('db_markets', "coinid={$coin->id} AND price!=0 AND NOT deleted AND
-				NOT disabled AND IFNULL(deposit_address,'') != '' AND
-				name IN ('poloniex','bittrex') ORDER BY priority DESC, price DESC");
-	}
+        if (!$market && empty($coin->market)) {
+                debuglog("best market for {$coin->symbol} is unknown");
+                $coin->market = 'unknown';
+                $coin->save();
+        }
 
-	if(!$market) {
-		$market = getdbosql('db_markets', "coinid={$coin->id} AND price!=0 AND NOT deleted AND
-			NOT disabled AND IFNULL(deposit_address,'') != '' ORDER BY priority DESC, price DESC");
-	}
-
-	if (!$market && empty($coin->market)) {
-		debuglog("best market for {$coin->symbol} is unknown");
-		$coin->market = 'unknown';
-		$coin->save();
-	}
-
-	return $market;
+        return $market;
 }
+
+
 
 function AverageIncrement($value1, $value2)
 {
