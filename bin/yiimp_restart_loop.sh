@@ -1,7 +1,7 @@
 #!/bin/bash
 # Restart the pseudo cron screens...
 
-LOG_DIR=/var/log
+LOG_DIR=/work/yiimp/log
 WEB_DIR=/var/web
 
 screen -X -S main quit
