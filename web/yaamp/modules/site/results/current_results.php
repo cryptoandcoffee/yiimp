@@ -22,11 +22,12 @@ echo <<<END
 <th data-sorter="numeric" align="right">Coins</th>
 <th data-sorter="numeric" align="right">Miners</th>
 <th data-sorter="numeric" align="right">Hashrate</th>
-<th data-sorter="currency" align="right">Fees**</th>
+<th data-sorter="currency" align="right">Fee</th>
 <th data-sorter="currency" class="estimate" align="right">Current<br>Estimate</th>
 <!--<th data-sorter="currency" >Norm</th>-->
 <th data-sorter="currency" class="estimate" align="right">24 Hours<br>Estimated</th>
-<th data-sorter="currency"align="right">24 Hours<br>Actual***</th>
+<th data-sorter="currency"align="right">24 Hours<br>Actual BTC</th>
+<th data-sorter="currency"align="right">24 Hours<br>Actual USD</th>
 </tr>
 </thead>
 END;
@@ -127,21 +128,25 @@ foreach($algos as $item)
 	echo '<td align="right" style="font-size: .8em;" data="'.$hashrate.'">'.$hashrate_sfx.'</td>';
 	echo "<td align=right style='font-size: .8em;'>{$fees}%</td>";
 
-	if($algo == $best_algo)
-		echo '<td class="estimate" align="right" style="font-size: .8em;" title="normalized '.$norm.'"><b>'.$price.'*</b></td>';
-	else if($norm>0)
-		echo '<td class="estimate" align="right" style="font-size: .8em;" title="normalized '.$norm.'">'.$price.'</td>';
+	//if($algo == $best_algo)
+	//	echo '<td class="estimate" align="right" style="font-size: .8em;" title="normalized '.$norm.'"><b>'.$price.'*</b></td>';
+	//else if($norm>0)
+	//	echo '<td class="estimate" align="right" style="font-size: .8em;" title="normalized '.$norm.'">'.$price.'</td>';
 
-	else
-		echo '<td class="estimate" align="right" style="font-size: .8em;">'.$price.'</td>';
-
-
+	//else
+	echo '<td class="estimate" align="right" style="font-size: .8em;">'.$price.'</td>';
 	echo '<td class="estimate" align="right" style="font-size: .8em;">'.$avgprice.'</td>';
 
-	if($algo == $best_algo)
-		echo '<td align="right" style="font-size: .8em;" data="'.$btcmhday1.'"><b>'.$btcmhday1.'*</b></td>';
-	else
+//	if($algo == $best_algo)
+//		echo '<td align="right" style="font-size: .8em;" data="'.$btcmhday1.'"><b>'.$btcmhday1.'*</b></td>';
+//	else
 		echo '<td align="right" style="font-size: .8em;" data="'.$btcmhday1.'">'.$btcmhday1.'</td>';
+  //USD Daily
+	//USD column
+	$mining = getdbosql('db_mining');
+ $usdmhd = round($mining->usdbtc * $btcmhday1,2);
+	//echo "<td align=right style='font-size: .8em;' data='$usdmhd'><b>$$usdmhd</b></td>";
+		echo '<td align="right" style="font-size: .8em;" data="'.$usdmhd.'">'.$usdmhd.'</td>';
 
 	echo "</tr>";
 

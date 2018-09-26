@@ -148,10 +148,10 @@ $hashrate2 = max($hashrate2 , 1);
 $hashrate3 = max($hashrate3 , 1);
 $hashrate4 = max($hashrate4 , 1);
 
-$btcmhday1 = mbitcoinvaluetoa($total1 / $hashrate1 * 1000000 * 24 * 1000);
-$btcmhday2 = mbitcoinvaluetoa($total2 / $hashrate2 * 1000000 * 1 * 1000);
-$btcmhday3 = mbitcoinvaluetoa($total3 / $hashrate3 * 1000000 / 7 * 1000);
-$btcmhday4 = mbitcoinvaluetoa($total4 / $hashrate4 * 1000000 / 30 * 1000);
+//$btcmhday1 = mbitcoinvaluetoa($total1 / $hashrate1 * 1000000 * 24 * 1000);
+//$btcmhday2 = mbitcoinvaluetoa($total2 / $hashrate2 * 1000000 * 1 * 1000);
+//$btcmhday3 = mbitcoinvaluetoa($total3 / $hashrate3 * 1000000 / 7 * 1000);
+//$btcmhday4 = mbitcoinvaluetoa($total4 / $hashrate4 * 1000000 / 30 * 1000);
 
 $hashrate1 = Itoa2($hashrate1);
 $hashrate2 = Itoa2($hashrate2);
@@ -163,6 +163,33 @@ $total2 = bitcoinvaluetoa($total2);
 $total3 = bitcoinvaluetoa($total3);
 $total4 = bitcoinvaluetoa($total4);
 
+
+
+//usd
+$mining = getdbosql('db_mining');
+$total11 = round($total1 * $mining->usdbtc, 2);
+$total22 = round($total2 * $mining->usdbtc, 2);
+$total33 = round($total3 * $mining->usdbtc, 2);
+$total44 = round($total4 * $mining->usdbtc, 2);
+
+ //$usdmhd = round($mining->usdbtc * $btcmhday1,2);
+	//echo "<td align=right style='font-size: .8em;' data='$usdmhd'><b>$$usdmhd</b></td>";
+	//	echo '<td align="right" style="font-size: .8em;" data="'.$usdmhd.'">'.$usdmhd.'</td>';
+
+//USD
+echo '<tr class="ssrow" style="border-top: 2px solid #eee;">';
+echo '<td width="18px"><img width="18px" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/USD.png"></td>';
+echo '<td colspan="2"><b>USD Value</b></td>';
+
+echo '<td align="right" style="font-size: .9em;">$'.$total11.'</td>';
+echo '<td align="right" style="font-size: .9em;">$'.$total22.'</td>';
+echo '<td align="right" style="font-size: .9em;">$'.$total33.'</td>';
+echo '<td align="right" style="font-size: .9em;">$'.$total44.'</td>';
+
+echo "</tr>";
+///////////////////////////////////////////////////////////////////////
+
+//BTC Values
 echo '<tr class="ssrow" style="border-top: 2px solid #eee;">';
 echo '<td width="18px"><img width="16px" src="/images/btc.png"></td>';
 echo '<td colspan="2"><b>BTC Value</b></td>';
@@ -173,12 +200,12 @@ echo '<td align="right" style="font-size: .9em;">'.$total3.'</td>';
 echo '<td align="right" style="font-size: .9em;">'.$total4.'</td>';
 
 echo "</tr>";
-
 ///////////////////////////////////////////////////////////////////////
+
 
 echo '<tr class="ssrow" style="border-top: 2px solid #eee;">';
 echo '<td width="18px"></td>';
-echo '<td colspan="2"><b>Avg Hashrate</b></td>';
+echo '<td colspan="2"><b>Avgerage Hashrate</b></td>';
 
 echo '<td align="right" style="font-size: .9em;">'.$hashrate1.'h/s</td>';
 echo '<td align="right" style="font-size: .9em;">'.$hashrate2.'h/s</td>';
@@ -188,7 +215,7 @@ echo '<td align="right" style="font-size: .9em;">'.$hashrate4.'h/s</td>';
 echo '</tr>';
 
 ///////////////////////////////////////////////////////////////////////
-
+/*
 echo '<tr class="ssrow" style="border-top: 2px solid #eee;">';
 echo '<td width="18px"></td>';
 echo '<td colspan="2"><b>mBTC/Mh/d</b></td>';
@@ -199,7 +226,7 @@ echo '<td align="right" style="font-size: .9em;">'.$btcmhday3.'</td>';
 echo '<td align="right" style="font-size: .9em;">'.$btcmhday4.'</td>';
 
 echo '</tr>';
-
+*/
 echo '</table>';
 
 

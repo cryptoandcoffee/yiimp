@@ -128,7 +128,7 @@ function showPageHeader()
 	$nextpayment = date('H:i T', $mining->last_payout+YAAMP_PAYMENTS_FREQ);
 	$eta = ($mining->last_payout+YAAMP_PAYMENTS_FREQ) - time();
 	$eta_mn = 'in '.round($eta / 60).' minutes';
- echo '<a href="https://www.okcoin.com/market.do" target="_blank" style="font-size: .8em;">BTC Price $'.$mining->usdbtc.'</a>';
+ echo '<a href="#" style="font-size: .8em;">BTC Price $'.$mining->usdbtc.'</a>';
  echo '<span id="nextpayout" style="font-size: .8em;" title="'.$eta_mn.'">Next Payout: '.$nextpayment.'</span>';
 	echo "</div>";
 	echo "</div>";

@@ -52,11 +52,12 @@ echo <<<END
 <th data-sorter=""></th>
 <th data-sorter="text">Name</th>
 <th align="right">Amount</th>
-<th data-sorter="numeric" align="right">Diff</th>
-<th align="right">Block</th>
-<th align="right">TTF***</th>
-<th data-sorter="numeric" align="right">Hash**</th>
-<th data-sorter="currency" align="right">Profit*</th>
+<th data-sorter="numeric" align="right">Difficulty</th>
+<th align="right">Current Block</th>
+<th align="right">Time to Find</th>
+<th data-sorter="numeric" align="right">Hashrate</th>
+<th data-sorter="currency" align="right">Profit BTC</th>
+<th data-sorter="currency" align="right">Profit USD</th>
 </tr>
 </thead>
 END;
@@ -178,9 +179,14 @@ foreach($list as $coin)
 		echo "<td align=right style='font-size: .8em; opacity: 0.6;' title='merge mined\n$network_hash' data='$pool_hash_pow'>$pool_hash_pow_sfx</td>";
 	else
 		echo "<td align=right style='font-size: .8em;' title='$network_hash' data='$pool_hash'>$pool_hash_sfx</td>";
-
+ //BTC column
 	$btcmhd = mbitcoinvaluetoa($btcmhd);
 	echo "<td align=right style='font-size: .8em;' data='$btcmhd'><b>$btcmhd</b></td>";
+ //USD column
+	$mining = getdbosql('db_mining');
+ $usdmhd = round($mining->usdbtc * $btcmhd,2);
+	echo "<td align=right style='font-size: .8em;' data='$usdmhd'><b>$$usdmhd</b></td>";
+
 	echo "</tr>";
 }
 
