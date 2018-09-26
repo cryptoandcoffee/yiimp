@@ -89,6 +89,8 @@ function yaamp_algo_mBTC_factor($algo)
 	case 'lbry':
  case 'neoscrypt':
 		return 0.01;
+ case 'polytimos':
+		return 0.1;		
 	case 'vanilla':
 		return 1000;
 	default:
