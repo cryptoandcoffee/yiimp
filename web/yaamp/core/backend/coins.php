@@ -22,41 +22,45 @@ function BackendCoinsUpdate()
 {
 	$debug = false;
 
-//	debuglog(__FUNCTION__);
+	debuglog(__FUNCTION__);
 	$t1 = microtime(true);
 
 	$pool_rate = array();
 	foreach(yaamp_get_algos() as $algo)
 		$pool_rate[$algo] = yaamp_pool_rate($algo);
 
-	$coins = getdbolist('db_coins', "installed");
+	$coins = getdbolist('db_coins', ""); // check all the coins all the time
 	foreach($coins as $coin)
 	{
-//		debuglog("doing $coin->name");
+		debuglog("doing $coin->name");
 
-		$remote = new WalletRPC($coin);
+		$remote = new WalletRPC($coin);	
 
 		$info = $remote->getinfo();
-		if(!$info && $coin->enable)
+		if(!$info)
 		{
-			debuglog("{$coin->symbol} no getinfo answer, retrying...");
-			sleep(3);
-			$info = $remote->getinfo();
-			if (!$info) {
-				debuglog("{$coin->symbol} disabled, no answer after 2 attempts. {$remote->error}");
+			
+				debuglog("{$coin->symbol} disabled, no answer after 1 attempts. {$remote->error}");
 				$coin->enable = false;
+				$coin->visible = false;
+				$coin->watch = 0;
+        $coin->auto_ready = false;
+        $coin->installed = false;
 				$coin->connections = 0;
 				$coin->save();
 				continue;
-			}
+	 
 		}
-
-		// auto-enable if auto_ready is set
-		if($coin->auto_ready && !empty($info))
-			$coin->enable = true;
-		else if (empty($info))
-			continue;
-
+		else
+			debuglog("{$coin->symbol} WORKING!{$remote->error}");
+				$coin->enable = true;
+				$coin->visible = true;
+				$coin->watch = 1;
+        $coin->auto_ready = true;
+        $coin->installed = true;
+				$coin->save();
+				//continue; //this would skip the rest of the checks if we just get getinfo
+		
 		if ($debug) echo "{$coin->symbol}\n";
 
 		if(isset($info['difficulty']))
@@ -225,6 +229,10 @@ function BackendCoinsUpdate()
 
 			else
 			{
+						debuglog("didsabling a bcoin wtf $coin->name");
+
+			debuglog("{$coin->symbol} didsabling a bcoin wtf, retrying...");
+
 				$coin->auto_ready = false;
 				$coin->errors = $remote->error;
 			}

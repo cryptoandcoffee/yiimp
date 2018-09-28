@@ -10,7 +10,7 @@ echo started in ${DIR}
 
 while true; do
         ${PHP_CLI} runconsole.php cronjob/runLoop2
-        sleep 60
+        sleep 900
 done
 exec bash
 
