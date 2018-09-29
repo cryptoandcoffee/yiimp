@@ -5,6 +5,11 @@
 @import url("news.css");
 @import url("objectmenu.css");
 
+.float-left {
+float:left;
+width:50%; // or 33% for equal width independent of parent width
+}
+
 body
 {
 	font: normal 10pt Arial,Helvetica,sans-serif;

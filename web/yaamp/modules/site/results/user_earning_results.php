@@ -35,7 +35,8 @@ span.block.cleared  { color: white; background-color: gray; }
 <th>Name</th>
 <th align=right>Amount</th>
 <th align=right>Percent</th>
-<th align=right>mBTC</th>
+<th align=right>BTC</th>
+<th align=right>USD</th>
 <th align=right>Time</th>
 <th align=right>Status</th>
 </tr>
@@ -61,14 +62,18 @@ foreach($earnings as $earning)
 			continue;
 
 		$reward = bitcoinvaluetoa($earning->amount);
-		$value = mbitcoinvaluetoa($earning->amount*1000);
+		$reward = bitcoinvaluetoa($earning->amount);
+		$value = mbitcoinvaluetoa($earning->amount);
 		$percent = $block->amount ? percentvaluetoa($earning->amount * 100/$block->amount) : 0;
 
 		echo '<tr class="ssrow">';
 		echo '<td width="18"><img width="16" src="/images/btc.png"></td>';
 		echo '<td><b>Rental</b><span style="font-size: .8em;"> ('.$block->algo.')</span></td>';
 		echo '<td align="right" style="font-size: .8em;"><b>'.$reward.' BTC</b></td>';
+		echo '<td align="right" style="font-size: .8em;"><b>'.$reward.' BTC</b></td>';
+
 		echo '<td align="right" style="font-size: .8em;">'.$percent.'%</td>';
+		echo '<td align="right" style="font-size: .8em;">'.$value.'</td>';
 		echo '<td align="right" style="font-size: .8em;">'.$value.'</td>';
 		echo '<td align="right" style="font-size: .8em;">'.$d.'&nbsp;ago</td>';
 		echo '<td align="right" style="font-size: .8em;"><span class="block cleared">Cleared</span></td>';
@@ -77,9 +82,14 @@ foreach($earnings as $earning)
 		continue;
 	}
 
+  $mining = getdbosql('db_mining');
 	$reward = altcoinvaluetoa($earning->amount);
 	$percent = $block->amount ? percentvaluetoa($earning->amount * 100/$block->amount) : 0;
-	$value = mbitcoinvaluetoa($earning->amount*$earning->price*1000);
+	$value = mbitcoinvaluetoa($earning->amount*$earning->price);
+	//$value1 = mbitcoinvaluetoa($earning->amount*$earning->price);
+  $total_earned_usd = mbitcoinvaluetoa($earning->amount*$earning->price*$mining->usdbtc); 
+  //$total_earned_usd1 = mbitcoinvaluetoa($total_earned_usd); 
+
 
 	$blockUrl = $coin->createExplorerLink($coin->name, array('height'=>$block->height));
 	echo '<tr class="ssrow">';
@@ -88,6 +98,8 @@ foreach($earnings as $earning)
 	echo '<td align="right" style="font-size: .8em;"><b>'.$reward.' '.$coin->symbol_show.'</b></td>';
 	echo '<td align="right" style="font-size: .8em;">'.$percent.'%</td>';
 	echo '<td align="right" style="font-size: .8em;">'.$value.'</td>';
+	echo '<td align="right" style="font-size: .8em;">$'.$total_earned_usd.'</td>';
+
 	echo '<td align="right" style="font-size: .8em;">'.$d.'&nbsp;ago</td>';
 	echo '<td align="right" style="font-size: .8em;">';
 

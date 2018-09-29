@@ -198,13 +198,20 @@ echo "</tr>";
 //$delay = 7*24*60*60;
 
 $total_earned = bitcoinvaluetoa($total_unsold + $balance + $total_paid);
-//$total_earned_usd = number_format($total_earned*$mining->usdbtc*$refcoin->price, 3, '.', ' ');
+$total_earned_usd = number_format($total_earned*$mining->usdbtc*$refcoin->price, 3, '.', ' ');
 
 echo "<tr class='ssrow' style='border-top: 3px solid #eee;'>";
 echo "<td><img width=16 src='$refcoin->image'></td>";
 echo "<td colspan=3><b>Total Earned</b></td>";
 echo "<td align=right style='font-size: .8em;'></td>";
 echo "<td align=right style='font-size: .9em;'>$total_earned $refcoin->symbol</td>";
+
+echo "<tr class='ssrow' style='border-top: 3px solid #eee;'>";
+echo "<td><img width=16 src='$refcoin->image'></td>";
+echo "<td colspan=3><b>Total Earned USD</b></td>";
+echo "<td align=right style='font-size: .8em;'></td>";
+echo "<td align=right style='background-color: #98D513; font-size: .9em;'>$$total_earned_usd </td>";
+
 echo "</tr>";
 
 echo "</table>";
@@ -213,10 +220,10 @@ echo "</div>";
 
 echo '<p style="font-size: .8em; margin-top: 0; padding-left: 4px;">';
 echo '* approximate from current exchange rates<br/>';
-if ($refcoin->symbol == 'BTC') {
+//if ($refcoin->symbol == 'BTC') {
 	$usd = number_format($mining->usdbtc, 2, '.', ' ');
 	echo '** bitstamp <b>'.$usd.'</b> USD/BTC';
-}
+//}
 echo '</p>';
 
 if ($refcoin->payout_min) {

@@ -249,7 +249,7 @@ function Itoa($i)
 	return $s;
 }
 
-function Itoa2($i, $precision=1)
+function Itoa2($i, $precision=2)
 {
 	$s = '';
 	if($i >= 1000*1000*1000*1000*1000)
@@ -267,7 +267,60 @@ function Itoa2($i, $precision=1)
 
 	return $s;
 }
+function Itoa3($i, $precision=2) //custom titles
+{
+	$s = '';
+	if($i >= 1000*1000*1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000/1000/1000, $precision) ." Ph/s";
+	else if($i >= 1000*1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000/1000, $precision) ." Th/s";
+	else if($i >= 1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000, $precision) ." Gh/s";
+	else if($i >= 1000*1000)
+		$s = round(floatval($i)/1000/1000, $precision) ." Mh/s";
+	else if($i >= 1000)
+		$s = round(floatval($i)/1000, $precision) ." kh/s";
+	else
+		$s = round(floatval($i), $precision);
 
+	return $s;
+}
+function Itoa4($i, $precision=2) //custom titles
+{
+	$s = '';
+	if($i >= 1000*1000*1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000/1000/1000, $precision) ."";
+	else if($i >= 1000*1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000/1000, $precision) ."";
+	else if($i >= 1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000, $precision) ."";
+	else if($i >= 1000*1000)
+		$s = round(floatval($i)/1000/1000, $precision) ."";
+	else if($i >= 1000)
+		$s = round(floatval($i)/1000, $precision) ."";
+	else
+		$s = round(floatval($i), $precision);
+
+	return $s;
+}
+function Itoa5($i, $precision=2) //used for special gh/s 
+{
+	$s = '';
+	if($i >= 1000*1000*1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000/1000/1000, $precision) ." Ph/s";
+	else if($i >= 1000*1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000/1000, $precision) ." Th/s";
+	else if($i >= 1000*1000*1000)
+		$s = round(floatval($i)/1000/1000/1000, $precision) ." Gh/s";
+	//else if($i >= 1000*1000)
+	//	$s = round(floatval($i)/1000/1000, $precision) ." Mh/s";
+	else if($i >= 1000)
+		$s = round(floatval($i)/1000, $precision) ." kh/s";
+	else
+		$s = round(floatval($i), $precision);
+
+	return $s;
+}
 function YesNo($b)
 {
 	if($b) return 'Yes';

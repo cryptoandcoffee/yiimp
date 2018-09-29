@@ -116,7 +116,7 @@ foreach($algos as $item)
 	$avgprice = $avgprice? mbitcoinvaluetoa(take_yaamp_fee($avgprice, $algo)): '-';
 
 	$algo_unit_factor = yaamp_algo_mBTC_factor($algo);
-	$btcmhday1 = $hashrate1 != 0? mbitcoinvaluetoa($total1 / $hashrate1 * 1000000 * 1000 * $algo_unit_factor): '-';
+	$btcmhday1 = $hashrate1 != 0? mbitcoinvaluetoa($total1 / $hashrate1 * 1000000 * 100 * $algo_unit_factor): '-';
 
 	$fees = yaamp_fee($algo);
 

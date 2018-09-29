@@ -44,11 +44,13 @@ td.right { text-align: right; }
 <thead>
 <tr>
 <td></td>
-<th>Name</th>
-<th align="right">Amount</th>
+<th>Coin</th>
+<th align="right">Reward</th>
+<th align="right">Reward BTC</th>
+<th align="right">Reward USD</th>
 <th align="right">Difficulty</th>
 <th align="right">Block</th>
-<th align="right">Time</th>
+<th align="right">When</th>
 <th align="right">Status</th>
 </tr>
 </thead>
@@ -78,12 +80,16 @@ foreach($db_blocks as $db_block)
 
 		continue;
 	}
+  $mining = getdbosql('db_mining');
 
 	$reward = round($db_block->amount, 3);
 	$coin = $db_block->coin ? $db_block->coin : getdbo('db_coins', $db_block->coin_id);
 	$difficulty = Itoa2($db_block->difficulty, 3);
 	$height = number_format($db_block->height, 0, '.', ' ');
-
+	//$value = mbitcoinvaluetoa($reward*$coin->price);
+	$price = bitcoinvaluetoa($coin->price);
+  $total_earned_btc = mbitcoinvaluetoa($reward*$price); 
+  $total_earned_usd = mbitcoinvaluetoa($reward*$price*$mining->usdbtc); 
 	$link = $coin->createExplorerLink($coin->name, array('hash'=>$db_block->blockhash));
 
 	$flags = $db_block->segwit ? '&nbsp;<img src="/images/ui/segwit.png" height="8px" valign="center" title="segwit"/>' : '';
@@ -92,6 +98,10 @@ foreach($db_blocks as $db_block)
 	echo '<td width="18px"><img width="16px" src="'.$coin->image.'"></td>';
 	echo '<td class="row"><b class="row">'.$link.'</b> ('.$db_block->algo.')'.$flags.'</td>';
 	echo '<td class="row right"><b>'.$reward.' '.$coin->symbol_show.'</b></td>';
+
+	echo '<td class="row right"><b>'.$total_earned_btc.'</b></td>';
+	echo '<td class="row right"><b>$'.$total_earned_usd.'</b></td>';
+
 	echo '<td class="row right" title="found '.$db_block->difficulty_user.'">'.$difficulty.'</td>';
 	echo '<td class="row right">'.$height.'</td>';
 	echo '<td class="row right">'.$d.' ago</td>';

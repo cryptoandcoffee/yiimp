@@ -65,7 +65,7 @@ foreach($db_blocks as $db_block)
 // 	$db_block->category = $tx['details'][0]['category'];
 
 	if($db_block->category == 'immature')
-		echo "<tr style='background-color: #e0d3e8;'>";
+		echo "<tr style='color: #fff; background-color: #5FC2EF;'>";
 	else
 		echo "<tr class='ssrow'>";
 

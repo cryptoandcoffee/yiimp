@@ -71,7 +71,7 @@ foreach($algos as $item)
 	$renting = mbitcoinvaluetoa($renting);
 
 	if($defaultalgo == $algo)
-		echo "<tr style='cursor: pointer; background-color: #e0d3e8;' onclick='javascript:select_algo(\"$algo\")'>";
+		echo "<tr style='cursor: pointer; color: #fff; background-color: #5FC2EF;' onclick='javascript:select_algo(\"$algo\")'>";
 	else
 		echo "<tr style='cursor: pointer' class='ssrow' onclick='javascript:select_algo(\"$algo\")'>";
 

@@ -32,7 +32,7 @@ else
 	$services = array();
 
 ////////////////////////////////////////////////////////////////////////////////////
-
+$mining = getdbosql('db_mining');
 $coin_count = $count > 1 ? "on $count wallets" : 'on a single wallet';
 $miner_count = $worker > 1 ? "$worker miners" : "$worker miner";
 WriteBoxHeader("Mining $coin_count $total_rate_d, $miner_count");
@@ -46,16 +46,20 @@ showTableSorter('maintable3', "{
 	}
 }");
 
+//<th align="right">Net Hash</th>
+
 echo <<<END
 <thead>
 <tr>
 <th data-sorter=""></th>
 <th data-sorter="text">Name</th>
-<th align="right">Amount</th>
+<th align="right">Reward</th>
+<th align="right">Price</th>
 <th data-sorter="numeric" align="right">Difficulty</th>
-<th align="right">Current Block</th>
-<th align="right">Time to Find</th>
-<th data-sorter="numeric" align="right">Hashrate</th>
+<th align="right">Block</th>
+<th align="right">TTF</th>
+<th align="right">TTF Pool</th>
+<th data-sorter="numeric" align="right">Hash Stats</th>
 <th data-sorter="currency" align="right">Profit BTC</th>
 <th data-sorter="currency" align="right">Profit USD</th>
 </tr>
@@ -83,28 +87,41 @@ foreach($list as $coin)
 //	$pool_ttf = $coin->pool_ttf? sectoa2($coin->pool_ttf): '';
 	$pool_ttf = $total_rate? $coin->difficulty * 0x100000000 / $total_rate: 0;
 	$reward = round($coin->reward, 3);
+	
+
+
 
 	$btcmhd = yaamp_profitability($coin);
 	$pool_hash = yaamp_coin_rate($coin->id);
 	$real_ttf = $pool_hash? $coin->difficulty * 0x100000000 / $pool_hash: 0;
+	$pool_hash_sfx = $pool_hash? Itoa4($pool_hash).'': '';
+	$pool_hash_sfx_1 = $pool_hash? Itoa3($pool_hash).'': '';
+	$pool_hash_sfx_2 = $pool_hash? Itoa5($pool_hash).'': '';
 
-	$pool_hash_sfx = $pool_hash? Itoa2($pool_hash).'h/s': '';
+	$real_ttf247 = $real_ttf; //in seconds
+
 	$real_ttf = $real_ttf? sectoa2($real_ttf): '';
+
 	$pool_ttf = $pool_ttf? sectoa2($pool_ttf): '';
 
+	$reward247 = 86400 / $real_ttf247 * $reward;
+  $reward24 = round($reward247, 3);
+  //convert ttf to mins first
+	//then divide by 3600 
+	//then multiply times reward
 	$pool_hash_pow = yaamp_pool_rate_pow($coin->algo);
-	$pool_hash_pow_sfx = $pool_hash_pow? Itoa2($pool_hash_pow).'h/s': '';
+	$pool_hash_pow_sfx = $pool_hash_pow? Itoa3($pool_hash_pow).'h/s': '';
 
 	$min_ttf = $coin->network_ttf>0? min($coin->actual_ttf, $coin->network_ttf): $coin->actual_ttf;
 	$network_hash = $coin->difficulty * 0x100000000 / ($min_ttf? $min_ttf: 60);
-	$network_hash = $network_hash? 'network hash '.Itoa2($network_hash).'h/s': '';
+	$network_hash = $network_hash? ''.Itoa3($network_hash).'': '';
 
 	if(controller()->admin && $services)
 	{
 		foreach($services as $i=>$service)
 		{
-			if($service->price*1000 < $btcmhd) continue;
-			$service_btcmhd = mbitcoinvaluetoa($service->price*1000);
+			if($service->price*100 < $btcmhd) continue;
+			$service_btcmhd = mbitcoinvaluetoa($service->price*100);
 
 			echo "<tr class='ssrow'>";
 			echo "<td width=18><img width=16 src='/images/btc.png'></td>";
@@ -155,7 +172,15 @@ foreach($list as $coin)
 	} else {
 		echo "<td><b><a href='/site/block?id=$coin->id'>$name</a></b><span style='font-size: .8em'> ($coin->algo)</span></td>";
 	}
-	echo "<td align=right style='font-size: .8em;'><b>$reward $coin->symbol_show</b></td>";
+  
+  $price_btc = bitcoinvaluetoa($coin->price);
+  $coin_usd_price = round($price_btc*$mining->usdbtc,4);  
+  $coin_btc_price = round($coin->price,4);  
+  $coin_btc_price = bitcoinvaluetoa($coin->price);
+	echo "<td align=right style='font-size: .8em;'>$reward $coin->symbol_show/block<br>$reward24 $coin->symbol_show/day</td>";
+
+	echo "<td align=right style='font-size: .8em;'>$price_btc BTC<br>$coin_usd_price USD</td>";
+	//echo "<td align=right style='font-size: .8em;'><b>$reward24</b></td>";
 
 	$title = "POW $coin->difficulty";
 	if($coin->rpcencoding == 'POS')
@@ -168,23 +193,32 @@ foreach($list as $coin)
 	else
 		echo "<td align=right style='font-size: .8em;'>$height</td>";
 
-	if(!YAAMP_ALLOW_EXCHANGE && !empty($real_ttf))
-		echo '<td align="right" style="font-size: .8em;" title="'.$pool_ttf.' at full pool speed">'.$real_ttf.'</td>';
-	elseif(!empty($real_ttf))
-		echo '<td align="right" style="font-size: .8em;" title="'.$real_ttf.' at '.Itoa2($pool_hash).'">'.$pool_ttf.'</td>';
-	else
-		echo '<td align="right" style="font-size: .8em;" title="At current pool speed">'.$pool_ttf.'</td>';
+	//if(!YAAMP_ALLOW_EXCHANGE && !empty($real_ttf))
+		echo '<td align="right" style="font-size: .8em;" title="'.$real_ttf.' at current speed '.Itoa2($pool_hash).'">'.$real_ttf.'</td>';
+		echo '<td align="right" style="font-size: .8em;" title="'.$pool_ttf.' at full pool speed">'.$pool_ttf.'</td>';
+		//echo '<td align="right" style="font-size: .8em;" title="'.$network_hash.' current network hash rate">'.$network_hash.'</td>';
+
+
+	//echo '<td align="right" style="font-size: .8em;" title="'.$real_ttf.' at current pool speed">'.$real_ttf.'</td>';
+	//echo '<td align="right" style="font-size: .8em;" title="'.$pool_ttf.' at full pool speed">'.$pool_ttf.'</td>';
+	//elseif(!empty($real_ttf))
+	//	echo '<td align="right" style="font-size: .8em;" title="'.$real_ttf.' at '.Itoa2($pool_hash).'">'.$pool_ttf.'</td>';
+
+	//else
+	//	echo '<td align="right" style="font-size: .8em;" title="At current pool speed">'.$pool_ttf.'</td>';
 
 	if($coin->auxpow && $coin->auto_ready)
 		echo "<td align=right style='font-size: .8em; opacity: 0.6;' title='merge mined\n$network_hash' data='$pool_hash_pow'>$pool_hash_pow_sfx</td>";
 	else
-		echo "<td align=right style='font-size: .8em;' title='$network_hash' data='$pool_hash'>$pool_hash_sfx</td>";
- //BTC column
+	  $ppp = round($pool_hash_sfx_1 / $network_hash * 100,2);
+		echo "<td align=right style='font-size: .8em;' title='$network_hash' data='$pool_hash'>$pool_hash_sfx_1 is $ppp% of $network_hash</td>";
+				//echo "<td align=right style='font-size: .8em;'></td>";
+
+  //BTC column
 	$btcmhd = mbitcoinvaluetoa($btcmhd);
 	echo "<td align=right style='font-size: .8em;' data='$btcmhd'><b>$btcmhd</b></td>";
- //USD column
-	$mining = getdbosql('db_mining');
- $usdmhd = round($mining->usdbtc * $btcmhd,2);
+  //USD column
+  $usdmhd = round($mining->usdbtc * $btcmhd,2);
 	echo "<td align=right style='font-size: .8em;' data='$usdmhd'><b>$$usdmhd</b></td>";
 
 	echo "</tr>";
@@ -194,7 +228,7 @@ if(controller()->admin && $services)
 {
 	foreach($services as $i=>$service)
 	{
-		$service_btcmhd = mbitcoinvaluetoa($service->price*1000);
+		$service_btcmhd = mbitcoinvaluetoa($service->price*100);
 
 		echo "<tr class='ssrow'>";
 		echo "<td width=18><img width=16 src='/images/btc.png'></td>";
@@ -227,13 +261,13 @@ if(isset($price_rent) && $showrental)
 
 
 echo "</table>";
-
+/*
 echo '<p style="font-size: .8em;">
 	&nbsp;*** estimated average time to find a block at full pool speed<br/>
 	&nbsp;** approximate from the last 5 minutes submitted shares<br/>
 	&nbsp;* 24h estimation from net difficulty in mBTC/MH/day (GH/day for sha & blake algos)<br>
 </p>';
-
+*/
 echo "</div></div><br>";
 
 
