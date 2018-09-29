@@ -73,6 +73,11 @@ function select_algo(algo)
 	window.location.href = '/site/gomining?algo='+algo;
 }
 
+function select_algo_all(algo)
+{
+	window.location.href = '/site/gomining?algo=all';
+}
+
 function page_refresh()
 {
 	pool_current_refresh();
