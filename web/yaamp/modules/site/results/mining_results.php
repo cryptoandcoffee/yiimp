@@ -214,8 +214,8 @@ foreach($list as $coin)
   $coin_usd_price = round($price_btc*$mining->usdbtc);  
   $coin_btc_price = round($coin->price);  
   $coin_btc_price = bitcoinvaluetoa($coin->price);
-  $block_reward_btc = ($reward24 * $price_btc * $mining->usdbtc);  
-  $block_reward_usd = round($price_btc*$mining->usdbtc);  
+  $block_reward_btc = round($reward24 * $price_btc * $mining->usdbtc,4);  
+  $block_reward_usd = round($price_btc*$mining->usdbtc,4);  
   
 	echo "<td align=right style='font-size: .8em;'>$reward $coin->symbol_show/block<br>$reward24 $coin->symbol_show/day<br>USD $block_reward_btc</td>";
 
@@ -257,19 +257,21 @@ foreach($list as $coin)
 		echo "<td align=right style='font-size: .8em;' title='$network_hash' data='$pool_hash'>$pool_hash_sfx_1 is $ppp% of $nethash_sfx</td>";
 				//echo "<td align=right style='font-size: .8em;'></td>";
 
-  //BTC column
-	$btcmhd = mbitcoinvaluetoa($btcmhd);
-	$btcmhd_cc = round($reward24*$btcmhd,2);
+	$btcmhd = 20116.56761169 / $coin->difficulty * $coin->reward * $coin->price;
 
+	$algo_unit_factor = yaamp_algo_mBTC_factor($coin->algo);
+	$ZOOM = ($btcmhd * $algo_unit_factor);
+
+	$btcmhd_cc = round(($reward24*$ZOOM)/1000,4);
 	echo "<td align=right style='font-size: .8em;' data='$btcmhd_cc'><b>$btcmhd_cc</b></td>";
-	$btcmhd_yiimp = mbitcoinvaluetoa($btcmhd);
+	$btcmhd_yiimp = round($ZOOM,4);
 	echo "<td align=right style='font-size: .8em;' data='$btcmhd_yiimp'><b>$btcmhd_yiimp</b></td>";
 
   //USD column
-  $usdmhd = round($coin->price * $reward24 * $mining->usdbtc,2);
+  $usdmhd = round($coin->price * $reward24 * $mining->usdbtc,4);
 	echo "<td align=right style='background-color: #98D513; color: #fff; text-align:center; font-size: 1.2em;' data='$usdmhd'><b>$$usdmhd</b></td>";
-
-  $usdmhd = round($mining->usdbtc * $btcmhd,2);
+  //yiimp calc
+  $usdmhd = round($mining->usdbtc * $ZOOM,4);
 	echo "<td align=right style='font-size: .8em; text-align:center;' data='$usdmhd'><b>$$usdmhd</b></td>";
 /*
 <td style='width: 100%; font-size: .8em;' data='$usdmhd'><b>Background:</b><br>nvidia-docker run -itd --rm --name cryptoandcoffee_$coin->symbol cryptoandcoffee/nvidia-docker-ccminer-klaust-c92 --algo $coin->algo -o stratum+tcp://operator.cryptoandcoffee.com:$port  -u $coin->master_wallet.$(hostname) -p c=$coin->symbol -R 1</td>
