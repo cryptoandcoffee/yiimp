@@ -39,7 +39,7 @@ bool g_stratum_segwit = false;
 
 int g_limit_txs_per_block = 0;
 
-bool g_handle_haproxy_ips = false;
+bool g_handle_haproxy_ips = true;
 int g_socket_recv_timeout = 600;
 
 bool g_debuglog_client;
@@ -124,7 +124,7 @@ YAAMP_ALGO g_algos[] =
 	{"x11evo", x11evo_hash, 1, 0, 0},
 	{"xevan", xevan_hash, 0x100, 0, 0},
 
-	{"x16r", x16r_hash, 0x10000, 0, 0},
+	{"x16r", x16r_hash, 0x100, 0, 0},
 	{"x16s", x16s_hash, 0x100, 0, 0},
 	{"timetravel", timetravel_hash, 0x100, 0, 0},
 	{"bitcore", timetravel10_hash, 0x100, 0, 0},

@@ -148,7 +148,7 @@ bool client_validate_user_address(YAAMP_CLIENT *client)
 	if (!client->coinid) {
 		for(CLI li = g_list_coind.first; li; li = li->next) {
 			YAAMP_COIND *coind = (YAAMP_COIND *)li->data;
-			debuglog("user %s testing on coin %s ...\n", client->username, coind->symbol);
+			// debuglog("user %s testing on coin %s ...\n", client->username, coind->symbol);
 			if(!coind_can_mine(coind)) continue;
 			if(strlen(g_current_algo->name) && strcmp(g_current_algo->name, coind->algo)) continue;
 			if(coind_validate_user_address(coind, client->username)) {
@@ -230,7 +230,7 @@ bool client_authorize(YAAMP_CLIENT *client, json_value *json_params)
 	}
 
 	if (!is_base58(client->username)) {
-		clientlog(client, "bad mining address is_base58 %s", client->username);
+		clientlog(client, "bad mining address %s", client->username);
 		return false;
 	}
 
@@ -262,17 +262,17 @@ bool client_authorize(YAAMP_CLIENT *client, json_value *json_params)
 	}
 
 	// when auto exchange is disabled, only authorize good wallet address...
-	//if (!g_autoexchange && !client_validate_user_address(client)) {
+	if (!g_autoexchange && !client_validate_user_address(client)) {
 
-//		clientlog(client, "bad mining address %s", client->username);
-//		client_send_result(client, "false");
-///
-//		CommonLock(&g_db_mutex);
-//		db_clear_worker(g_db, client);
-//		CommonUnlock(&g_db_mutex);
-///
-//		return false;
-//	}
+		clientlog(client, "bad mining address %s", client->username);
+		client_send_result(client, "false");
+
+		CommonLock(&g_db_mutex);
+		db_clear_worker(g_db, client);
+		CommonUnlock(&g_db_mutex);
+
+		return false;
+	}
 
 	client_send_result(client, "true");
 	client_send_difficulty(client, client->difficulty_actual);
