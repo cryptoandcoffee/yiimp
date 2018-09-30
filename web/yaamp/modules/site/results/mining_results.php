@@ -183,7 +183,33 @@ foreach($list as $coin)
 		echo "<td><b><a href='/site/block?id=$coin->id'>$coin->algo</a></b></td>";
 
 	}
-  
+  //////////////////////////////////////////////////////
+		if (!$coin->network_hash) {
+		$remote = new WalletRPC($coin);
+		if ($remote)
+			$info = $remote->getmininginfo();
+		if (isset($info['networkhashps'])) {
+			$coin->network_hash = $info['networkhashps'];
+			// Got 12493610317.376
+						//echo "<p>got coin->network_hash : $coin->network_hash</p>";
+
+			controller()->memcache->set("yiimp-nethashrate-{$coin->symbol}", $info['networkhashps'], 60);
+		}
+		else if (isset($info['netmhashps'])) {
+			$coin->network_hash = floatval($info['netmhashps']) * 1e6;
+						//echo "<p>got coin->network_hash2 : $coin->network_hash</p>";
+
+			controller()->memcache->set("yiimp-nethashrate-{$coin->symbol}", $coin->network_hash, 60);
+		}
+		}
+//////////////////////////////////////////////////////////
+	//$network_hash = $coin->difficulty * 0x100000000 / ($min_ttf? $min_ttf: 60);
+	//		echo "<p>got network_hash : $network_hash</p>";
+	
+	//$network_hash = $network_hash? 'network hash '.Itoa2($network_hash).'h/s': '';
+	//		echo "<p>got network_hash : $network_hash</p>";
+	
+	$nethash_sfx = $coin->network_hash? strtoupper(Itoa2($coin->network_hash)).'H/s': '';
   $price_btc = bitcoinvaluetoa($coin->price);
   $coin_usd_price = round($price_btc*$mining->usdbtc);  
   $coin_btc_price = round($coin->price);  
@@ -224,8 +250,11 @@ foreach($list as $coin)
 	if($coin->auxpow && $coin->auto_ready)
 		echo "<td align=right style='font-size: .8em; opacity: 0.6;' title='merge mined\n$network_hash' data='$pool_hash_pow'>$pool_hash_pow_sfx</td>";
 	else
-	  $ppp = round($pool_hash_sfx_1 / $network_hash * 100,2);
-		echo "<td align=right style='font-size: .8em;' title='$network_hash' data='$pool_hash'>$pool_hash_sfx_1 is $ppp% of $network_hash</td>";
+	  $ppp = round(($pool_hash / $coin->network_hash)*100,4);
+		//	echo "$pool_hash";
+		//echo "$coin->network_hash";
+
+		echo "<td align=right style='font-size: .8em;' title='$network_hash' data='$pool_hash'>$pool_hash_sfx_1 is $ppp% of $nethash_sfx</td>";
 				//echo "<td align=right style='font-size: .8em;'></td>";
 
   //BTC column
