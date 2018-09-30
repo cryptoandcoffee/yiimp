@@ -14,7 +14,7 @@ body
 {
 	font: normal 10pt Arial,Helvetica,sans-serif;
 	background-color: white;
-	color: #444;
+	color: #000;
 	text-align: left;
 	margin: 0;
 	padding: 0;
@@ -30,8 +30,9 @@ a, a:visited
 
 a:hover
 {
-	color: #0B5577;
-	background: inherit;
+
+	color: white;
+	background: #0B5577;
 	text-decoration: underline;
 }
 
@@ -55,6 +56,12 @@ hr
     border-top: 1px solid #e5e5e5;
 }
     
+.nvidia-docker{
+color: #1357D5;
+min-width: 600px;
+font-size: 0.9em;
+}
+
 
 .page
 {
@@ -89,12 +96,12 @@ hr
 
 .page .tabmenu-out
 {
+
 	position: fixed;
 	top: 0px;
 	right: 0px;
 	left: 0px;
 	z-index: 8;
-	height: 40px;
 	background: #1498D5;
 	color: white;
 	background-repeat: repeat-x;
@@ -113,7 +120,7 @@ hr
 .page .tabmenu-inner a
 {
 	text-decoration: none;
-	padding: 10px;
+	padding: 9px;
 	color: #fff;
 }
 
@@ -128,7 +135,7 @@ hr
 
 .page .main
 {
-	padding: 10px 10px;
+	padding: 36px 10px;
 	border: 0;
 	margin: 0;
 	font-size: 1.2em;
@@ -136,12 +143,13 @@ hr
 
 .page .content-out
 {
-	padding: 36px 0px 0px 0px;
+	padding: 20px 0px 0px 0px;
 }
 
 .page .content-inner
 {
-	padding: 10px;
+	  padding: 20px;
+
 }
 
 /* ---------------------------------------------- */
@@ -175,7 +183,7 @@ hr
 	padding: 5px;
 	font-weight: bold;
 	color: white;
-	background: black;
+	background: #1498D5;
 }
 
 .main-left-inner

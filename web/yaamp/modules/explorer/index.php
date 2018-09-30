@@ -94,10 +94,10 @@ foreach($list as $coin)
 
 	echo "<td>";
 
-	if(!empty($coin->link_bitcointalk))
+		echo CHtml::link('wallet', $coin->link_bitcointalk, array('target'=>'_blank'));
+
 		echo CHtml::link('forum', $coin->link_bitcointalk, array('target'=>'_blank'));
 
-	elseif(!empty($coin->link_site))
 		echo CHtml::link('site', $coin->link_site, array('target'=>'_blank'));
 
 	echo "</td>";

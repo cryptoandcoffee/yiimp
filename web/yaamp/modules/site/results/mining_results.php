@@ -49,10 +49,13 @@ showTableSorter('maintable3', "{
 //<th align="right">Net Hash</th>
 
 echo <<<END
+ 
 <thead>
 <tr>
 <th data-sorter=""></th>
+<th data-sorter="text">Symbol</th>
 <th data-sorter="text">Name</th>
+<th data-sorter="text">Algo</th>
 <th align="right">Reward</th>
 <th align="right">Price</th>
 <th data-sorter="numeric" align="right">Difficulty</th>
@@ -60,8 +63,11 @@ echo <<<END
 <th align="right">TTF</th>
 <th align="right">TTF Pool</th>
 <th data-sorter="numeric" align="right">Hash Stats</th>
-<th data-sorter="currency" align="right">Profit BTC</th>
-<th data-sorter="currency" align="right">Profit USD</th>
+<th data-sorter="currency" align="right">Profit BTC/C&C</th>
+<th data-sorter="currency" align="right">Profit BTC/YIIMP</th>
+<th data-sorter="currency" align="right">Profit USD/C&C</th>
+<th data-sorter="currency" align="right">Profit USD/YIIMP</th>	
+<th align="right"><a href='#'>nvidia-docker Install Guide | </a><a href="https://hub.docker.com/u/cryptoandcoffee/" target="_new">Browse our Docker Hub</a><br><b>Run in background with "-itd" or benchmark by adding "--benchmark"</b></th>
 </tr>
 </thead>
 END;
@@ -77,6 +83,7 @@ if($algo != 'all' && $showrental)
 	$amount_rent = dboscalar("select sum(amount) from jobsubmits where status=1 and algo=:algo", array(':algo'=>$algo));
 	$amount_rent = bitcoinvaluetoa($amount_rent);
 }
+	$port = getAlgoPort($algo);
 
 foreach($list as $coin)
 {
@@ -157,7 +164,7 @@ foreach($list as $coin)
 	if(!$coin->auto_ready)
 		echo "<tr style='opacity: 0.4;'>";
 	else
-		echo "<tr class='ssrow'>";
+		echo "<tr>";
 
 	echo '<td width="18">';
 	echo $coin->createExplorerLink('<img width="16" src="'.$coin->image.'">');
@@ -170,14 +177,21 @@ foreach($list as $coin)
 		$title = "We are short of this currency ($owed2 $symbol). Please switch to another currency until we find more $symbol blocks.";
 		echo "<td><b><a href=\"/site/block?id={$coin->id}\" title=\"$title\" style=\"color: #c55;\">$name</a></b><span style=\"font-size: .8em;\"> ({$coin->algo})</span></td>";
 	} else {
-		echo "<td><b><a href='/site/block?id=$coin->id'>$name</a></b><span style='font-size: .8em'> ($coin->algo)</span></td>";
+				$symbol = $coin->getOfficialSymbol();
+		echo "<td><b><a href='/site/block?id=$coin->id'>$coin->symbol</a></b></td>";
+		echo "<td><b><a href='/site/block?id=$coin->id'>$coin->name</a></b></td>";
+		echo "<td><b><a href='/site/block?id=$coin->id'>$coin->algo</a></b></td>";
+
 	}
   
   $price_btc = bitcoinvaluetoa($coin->price);
-  $coin_usd_price = round($price_btc*$mining->usdbtc,4);  
-  $coin_btc_price = round($coin->price,4);  
+  $coin_usd_price = round($price_btc*$mining->usdbtc);  
+  $coin_btc_price = round($coin->price);  
   $coin_btc_price = bitcoinvaluetoa($coin->price);
-	echo "<td align=right style='font-size: .8em;'>$reward $coin->symbol_show/block<br>$reward24 $coin->symbol_show/day</td>";
+  $block_reward_btc = ($reward24 * $price_btc * $mining->usdbtc);  
+  $block_reward_usd = round($price_btc*$mining->usdbtc);  
+  
+	echo "<td align=right style='font-size: .8em;'>$reward $coin->symbol_show/block<br>$reward24 $coin->symbol_show/day<br>USD $block_reward_btc</td>";
 
 	echo "<td align=right style='font-size: .8em;'>$price_btc BTC<br>$coin_usd_price USD</td>";
 	//echo "<td align=right style='font-size: .8em;'><b>$reward24</b></td>";
@@ -216,12 +230,42 @@ foreach($list as $coin)
 
   //BTC column
 	$btcmhd = mbitcoinvaluetoa($btcmhd);
-	echo "<td align=right style='font-size: .8em;' data='$btcmhd'><b>$btcmhd</b></td>";
-  //USD column
-  $usdmhd = round($mining->usdbtc * $btcmhd,2);
-	echo "<td align=right style='font-size: .8em;' data='$usdmhd'><b>$$usdmhd</b></td>";
+	$btcmhd_cc = round($reward24*$btcmhd,2);
 
+	echo "<td align=right style='font-size: .8em;' data='$btcmhd_cc'><b>$btcmhd_cc</b></td>";
+	$btcmhd_yiimp = mbitcoinvaluetoa($btcmhd);
+	echo "<td align=right style='font-size: .8em;' data='$btcmhd_yiimp'><b>$btcmhd_yiimp</b></td>";
+
+  //USD column
+  $usdmhd = round($coin->price * $reward24 * $mining->usdbtc,2);
+	echo "<td align=right style='background-color: #98D513; color: #fff; text-align:center; font-size: 1.2em;' data='$usdmhd'><b>$$usdmhd</b></td>";
+
+  $usdmhd = round($mining->usdbtc * $btcmhd,2);
+	echo "<td align=right style='font-size: .8em; text-align:center;' data='$usdmhd'><b>$$usdmhd</b></td>";
+/*
+<td style='width: 100%; font-size: .8em;' data='$usdmhd'><b>Background:</b><br>nvidia-docker run -itd --rm --name cryptoandcoffee_$coin->symbol cryptoandcoffee/nvidia-docker-ccminer-klaust-c92 --algo $coin->algo -o stratum+tcp://operator.cryptoandcoffee.com:$port  -u $coin->master_wallet.$(hostname) -p c=$coin->symbol -R 1</td>
+<td style='width: 100%; font-size: .8em;' data='$usdmhd'><b>Benchmark:</b><br>nvidia-docker run -it --rm --name cryptoandcoffee_$coin->symbol cryptoandcoffee/nvidia-docker-ccminer-klaust-c92 --benchmark --algo $coin->algo -o stratum+tcp://operator.cryptoandcoffee.com:$port  -u $coin->master_wallet.$(hostname) -p c=$coin->symbol -R 1</td>
+*/
+
+echo <<<END
+
+
+   
+
+
+<td style='width: 100%; font-size: .8em;' data='$usdmhd'><div class="">nvidia-docker run -it --rm --name cryptoandcoffee_$coin->symbol $coin->link_site --algo $coin->algo -o stratum+tcp://operator.cryptoandcoffee.com:$port -u $coin->master_wallet.$(hostname) -p c=$coin->symbol -R 1</div> <!-- The button used to copy the text -->
+<button onclick="myFunction()">Quick Connect/Copy to Clipboard</button>
+<input type="hidden" display="" value="nvidia-docker run -it --rm --name cryptoandcoffee_$coin->symbol $coin->link_site --algo $coin->algo -o stratum+tcp://operator.cryptoandcoffee.com:$port -u $coin->master_wallet.$(hostname) -p c=$coin->symbol -R 1" id="myInput">
+
+</tr>
+
+
+<!-- The text field -->
+
+
+END;
 	echo "</tr>";
+
 }
 
 if(controller()->admin && $services)
@@ -261,6 +305,7 @@ if(isset($price_rent) && $showrental)
 
 
 echo "</table>";
+
 /*
 echo '<p style="font-size: .8em;">
 	&nbsp;*** estimated average time to find a block at full pool speed<br/>
@@ -268,6 +313,14 @@ echo '<p style="font-size: .8em;">
 	&nbsp;* 24h estimation from net difficulty in mBTC/MH/day (GH/day for sha & blake algos)<br>
 </p>';
 */
-echo "</div></div><br>";
+echo "</div></div>";
+echo <<<END
+<p style='font-size: .8em;'>
+nvidia-docker can be run a few different ways:<br> 
+Run in the foreground: <b>nvidia-docker run -it --rm --name cryptoandcoffee_\$SYMBOL</b><br>
+Run in the background: <b>nvidia-docker run -itd --rm --name cryptoandcoffee_\$SYMBOL</b><br>
+You can always stop the container with: <b>docker kill cryptoandcoffee_\$SYMBOL</b>
+</p>
 
+END;
 

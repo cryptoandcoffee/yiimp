@@ -130,14 +130,32 @@ table.reportgrid1 tr.bold
 }
 
 /**********************************************/
-
+.ssrow
+{
+	color:#0B5577;
+}
 .ssrow:hover
 {
-	background-color: #e3f0f8;
+		color: white;
+	background: #0B5577;
+	text-decoration: underline;
+	/*color: white;
+	background-color: #0B5577;*/
+}
+.ssrow:link
+{
+	color: #0B5577;
 }
 
 .ssselected
 {
-	background-color: #d3e0e8;
+	background-color: #0B5577;
 }
-
+.menu_hover:hover
+{
+	color: #0B5577;
+}
+.menu_hover, .menu_hover:visited
+{
+	color: #0B5577;
+}

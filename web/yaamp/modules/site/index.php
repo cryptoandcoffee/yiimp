@@ -120,7 +120,7 @@ $payout_freq = (YAAMP_PAYMENTS_FREQ / 3600)." hours";
 <ul>
 
 <li>
-	<a href="https://hub.docker.com/u/cryptoandcoffee/">Browse our Docker Hub</a>
+	<a href="https://hub.docker.com/u/cryptoandcoffee/" target="_new">Browse our Docker Hub</a>
 <p class="main-left-box" style='padding: 3px; font-size: 0.8em; background-color: #1498D5; color: #FFF; font-family: monospace;'>
 	nvidia-docker run -it cryptoandcoffee/nvidia-docker-ccminer-tpruvot-c92 \<br>
 	--algo &lt;ALGO&gt; -o stratum+tcp://<?= YAAMP_STRATUM_URL ?>:&lt;PORT&gt; -u &lt;WALLET&gt; [-p &lt;OPTIONS&gt;]</p>
