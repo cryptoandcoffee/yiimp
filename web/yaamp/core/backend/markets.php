@@ -9,36 +9,35 @@ function BackendPricesUpdate()
 	market_set_default('bter', 'SFR', 'disabled', true);
 
 	settings_prefetch_all();
-
-	updateBittrexMarkets();
-	updateBitzMarkets();
-	updatePoloniexMarkets();
-	updateBleutradeMarkets();
-	updateCryptoBridgeMarkets();
-	updateGateioMarkets();
-	updateGraviexMarkets();
-	updateKrakenMarkets();
-	updateKuCoinMarkets();
-	updateCCexMarkets();
-	updateCrex24Markets();
-	updateCryptopiaMarkets();
-	updateHitBTCMarkets();
-	updateYobitMarkets();
 	updateAlcurexMarkets();
 	updateBinanceMarkets();
+	updateBittrexMarkets();
+	updateBitzMarkets();
+	updateBleutradeMarkets();
 	updateBterMarkets();
-	updateCryptohubMarkets();
-	//updateEmpoexMarkets();
-	updateJubiMarkets();
-	updateLiveCoinMarkets();
-	updateNovaMarkets();
+	updateCCexMarkets();
 	updateCoinExchangeMarkets();
 	updateCoinsMarketsMarkets();
+	updateCrex24Markets();
+  updateCryptoBridgeMarkets();
+	updateCryptohubMarkets();
+	updateCryptopiaMarkets();
+	//updateEmpoexMarkets();
+	updateGateioMarkets();
+	updateGraviexMarkets();
+	updateHitBTCMarkets();
+	updateJubiMarkets();
+	updateKrakenMarkets();
+	updateKuCoinMarkets();
+	updateLiveCoinMarkets();
+	updateNovaMarkets();
+	updateOtherMarkets();
+	updatePoloniexMarkets();
+	updateShapeShiftMarkets();
 	updateStocksExchangeMarkets();
 	updateTradeSatoshiMarkets();
+	updateYobitMarkets();
 
-	updateShapeShiftMarkets();
-	updateOtherMarkets();
 
 	$list2 = getdbolist('db_coins', "installed AND IFNULL(symbol2,'') != ''");
 	foreach($list2 as $coin2)

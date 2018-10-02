@@ -19,14 +19,14 @@ function BackendDoBackup()
 	$user = YIIMP_MYSQLDUMP_USER;
 	$pass = YIIMP_MYSQLDUMP_PASS;
 
-	if (1) {
+	//if (1) {
 		// faster on huge databases if the disk is fast (nvme), reduce the db lock time
 		system("mysqldump -h $host -u$user -p$pass --skip-extended-insert $db > $filename");
 		shell_exec("$ziptool $filename &"); // compress then the .sql in background (db is no more locked)
-	} else {
+	//} else {
 		// previous method (ok on small pools)
-		system("mysqldump -h $host -u$user -p$pass --skip-extended-insert $db | $ziptool > $filename$ext");
-	}
+	//	system("mysqldump -h $host -u$user -p$pass --skip-extended-insert $db | $ziptool > $filename$ext");
+	//}
 }
 
 function BackendQuickClean()

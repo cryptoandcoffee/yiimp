@@ -7,17 +7,7 @@ function updateRawcoins()
 {
 //	debuglog(__FUNCTION__);
 
-	exchange_set_default('alcurex', 'disabled', true);
-	exchange_set_default('binance', 'disabled', true);
-	exchange_set_default('bter', 'disabled', true);
-	exchange_set_default('empoex', 'disabled', true);
-	exchange_set_default('coinexchange', 'disabled', true);
-	exchange_set_default('coinsmarkets', 'disabled', true);
-	exchange_set_default('gateio', 'disabled', true);
-	exchange_set_default('jubi', 'disabled', true);
-	exchange_set_default('nova', 'disabled', true);
-	exchange_set_default('stocksexchange', 'disabled', true);
-	exchange_set_default('tradesatoshi', 'disabled', true);
+
 
 	settings_prefetch_all();
 
@@ -444,14 +434,14 @@ function updateRawCoin($marketname, $symbol, $name='unknown')
 			}
 		}
 
-		if (in_array($marketname, array('nova','askcoin','binance','bitz','coinexchange','coinsmarkets','cryptobridge','hitbtc'))) {
+		//if (in_array($marketname, array('nova','askcoin','bitz'))) {
 			// don't polute too much the db with new coins, its better from exchanges with labels
-			return;
-		}
+		//	return;
+		//}
 
 		// some other to ignore...
-		if (in_array($marketname, array('crex24','yobit','kucoin','tradesatoshi')))
-			return;
+		//if (in_array($marketname, array('yobit','tradesatoshi')))
+		//	return;
 
 		if (market_get($marketname, $symbol, "disabled")) {
 			return;
@@ -471,7 +461,7 @@ function updateRawCoin($marketname, $symbol, $name='unknown')
 		$url = getMarketUrl($coin, $marketname);
 		if (YAAMP_NOTIFY_NEW_COINS)
 			mail(YAAMP_ADMIN_EMAIL, "New coin $symbol", "new coin $symbol ($name) on $marketname\r\n\r\n$url");
-		sleep(30);
+		//sleep(30);
 	}
 
 	else if($coin && $coin->name == 'unknown' && $name != 'unknown')
